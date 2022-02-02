@@ -1,217 +1,196 @@
-(function($, document, window) {
-	
-	$(document).ready(function() {
+(function ($, document, window) {
 
-		if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-			$( '.range-slider' ).hide();
-			$( '.mobile-range-values' ).show();
-		}
+    $(document).ready(function () {
 
-		detectPhoneNumbers();
+        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-		// $( '.property-sold' ).on( 'click', 'a', function( e ){
-		// 	e.preventDefault();
-		// });
+        if (isMobile) {
+            getPropertyImages();
 
-		$( '.assoc-broker' ).on( 'change', 'select', function(){
-			var value = $( this ).val();
-			window.location.href = value;
-		});
+            $('.range-slider').hide();
+            $('.mobile-range-values').show();
+        }
 
-		$( '#search-in-filter' ).on('change', function( e ){
-			e.preventDefault();
-			var formURL = $( this ).find( ':selected' ).data( 'url' );
-			$( this ).parents( 'form' ).attr( 'action', formURL );
-		});
+        detectPhoneNumbers();
 
-		$( '.quick-search' ).on('click', 'input', function( e ) {
-			e.preventDefault();
+        $('.assoc-broker').on('change', 'select', function () {
+            var value = $(this).val();
+            window.location.href = value;
+        });
 
-			var formURL = $( this ).data( 'url' ),
-				$form = $( '.form-fast-search form' );
-			
-			$form.attr( 'action', formURL );
-			$form.trigger( 'submit' );
-		});
+        $('#search-in-filter').on('change', function (e) {
+            e.preventDefault();
+            var formURL = $(this).find(':selected').data('url');
+            $(this).parents('form').attr('action', formURL);
+        });
 
-		$( '.map' ).find( 'g' ).filter("[id]").each(function(){
-			$( this ).on( 'click', function(){
+        $('.quick-search').on('click', 'input', function (e) {
+            e.preventDefault();
 
-				var $that = $( this ),
-					title = $that.attr( 'title' );
+            var formURL = $(this).data('url'),
+                $form = $('.form-fast-search form');
 
-				var titleAlt = '';
-				if ( $that.attr( 'data-sp-case' ) && $that.attr( 'data-sp-case' ).length > 0 ) {
-					titleAlt = $that.attr( 'data-sp-case' );
-				}
+            $form.attr('action', formURL);
+            $form.trigger('submit');
+        });
 
-				$( '.areas-filter li' ).each(function(){
+        $('.map').find('g').filter("[id]").each(function () {
+            $(this).on('click', function () {
 
-					var areaLabel 	= $( this ).find( 'label' ).text(),
-						$input 		= $( this ).find( 'input' );
+                var $that = $(this),
+                    title = $that.attr('title');
 
-					if ( areaLabel === title || areaLabel === titleAlt ) {
-						if ( $input.is( ':checked' ) ) {
-							$input.prop( 'checked', false );
-							$that.removeAttr( 'class' );
-						} else {
-							$input.prop( 'checked', true );
-							$that.attr( 'class', 'item-selected' );
-						}
-					}
+                var titleAlt = '';
+                if ($that.attr('data-sp-case') && $that.attr('data-sp-case').length > 0) {
+                    titleAlt = $that.attr('data-sp-case');
+                }
 
-				});
+                $('.areas-filter li').each(function () {
 
-			});
-		});
+                    var areaLabel = $(this).find('label').text(),
+                        $input = $(this).find('input');
 
-		$( '.areas-filter' ).on( 'click', 'input', function(){
+                    if (areaLabel === title || areaLabel === titleAlt) {
+                        if ($input.is(':checked')) {
+                            $input.prop('checked', false);
+                            $that.removeAttr('class');
+                        } else {
+                            $input.prop('checked', true);
+                            $that.attr('class', 'item-selected');
+                        }
+                    }
 
-			var $input 		= $( this ),
-				$areaLabel 	= $input.siblings( 'label' ),
-				text 		= $areaLabel.text();
+                });
 
-			if ( $areaLabel.data( 'sp-case' ).length > 0 ) {
-				text = $areaLabel.data( 'sp-case' );
-			}
+            });
+        });
 
-			var $mapArea = $( '.map g[title="'+ text +'"]' );
+        $('.areas-filter').on('click', 'input', function () {
 
-			if ( $input.is( ':checked' ) ) {
-				$mapArea.attr( 'class', 'item-selected' );
-			} else {
-				$mapArea.removeAttr( 'class' );
-			}
+            var $input = $(this),
+                $areaLabel = $input.siblings('label'),
+                text = $areaLabel.text();
 
-		});
+            if ($areaLabel.data('sp-case').length > 0) {
+                text = $areaLabel.data('sp-case');
+            }
 
-		$( '.form-controls' ).on( 'click', '.dd-filter-head', function(){
-			$( this )
-				.parent( '.dd-filter' )
-					.find( '.dd-filter-inner' )
-					.slideToggle( 400 );
-		});
+            var $mapArea = $('.map g[title="' + text + '"]');
 
-		gf_placeholder();
-		$(document).bind('gform_page_loaded', gf_placeholder);
+            if ($input.is(':checked')) {
+                $mapArea.attr('class', 'item-selected');
+            } else {
+                $mapArea.removeAttr('class');
+            }
 
-		$('.property-seconadary:nth-child(2n)').addClass('second');
+        });
 
-		// HOME PAGE INTRO
-		$('.intro .flexslider').flexslider({
-			animation : "fade",
-			start : function(slider) {
-				$('.intro a.slider-prev').on('click', function(e) {
-					e.preventDefault()
-					slider.flexAnimate(slider.getTarget("next"));
-				})
+        $('.form-controls').on('click', '.dd-filter-head', function () {
+            $(this)
+                .parent('.dd-filter')
+                .find('.dd-filter-inner')
+                .slideToggle(400);
+        });
 
-				$('.intro a.slider-next').on('click', function(e) {
-					e.preventDefault()
-					slider.flexAnimate(slider.getTarget("prev"));
-				})				
-			},
-			before : function (slider) {
-				$('.slider-content').addClass('hide')
-			},
-			after : function() {
-				$('.slider-content').removeClass('hide')	
-			}
-		})
+        gf_placeholder();
+        $(document).bind('gform_page_loaded', gf_placeholder);
 
-		$('.intro .flexslider .slide').each(function() {
-			var currentImage = $(this).find('.slide-image img').attr('src')
-			$(this).find('.slide-image').css({
-				backgroundImage: 'url('+currentImage+')'
-			})
-		})
+        $('.property-seconadary:nth-child(2n)').addClass('second');
 
-		$('.intro-secondary').each(function() {
-			var currentImage = $(this).find('.intro-image').attr('src')
-			$(this).css({
-				backgroundImage: 'url('+currentImage+')'
-			})
-		})
+        // HOME PAGE INTRO
+        $('.intro .flexslider').flexslider({
+            animation: "fade",
+            start: function (slider) {
+                $('.intro a.slider-prev').on('click', function (e) {
+                    e.preventDefault()
+                    slider.flexAnimate(slider.getTarget("next"));
+                })
 
-		// HOME PAGE MOST VIEWED
-		$('.slider-secondary .flexslider').flexslider({
-			animation : "slide",
-			slideshow: false,
-			start : function(slider) {
-				$('.slider-secondary a.slider-next').on('click', function(e) {
-					e.preventDefault()
-					slider.flexAnimate(slider.getTarget("prev"));
-				})
+                $('.intro a.slider-next').on('click', function (e) {
+                    e.preventDefault()
+                    slider.flexAnimate(slider.getTarget("prev"));
+                })
+            },
+            before: function (slider) {
+                $('.slider-content').addClass('hide')
+            },
+            after: function () {
+                $('.slider-content').removeClass('hide')
+            }
+        })
 
-				$('.slider-secondary a.slider-prev').on('click', function(e) {
-					e.preventDefault()
-					slider.flexAnimate(slider.getTarget("next"));
-				})
-			}
-		});
+        $('.intro .flexslider .slide').each(function () {
+            var currentImage = $(this).find('.slide-image img').attr('src')
+            $(this).find('.slide-image').css({
+                backgroundImage: 'url(' + currentImage + ')'
+            })
+        })
 
-		$('.link-menu').on('click', function( e ) {
+        $('.intro-secondary').each(function () {
+            var currentImage = $(this).find('.intro-image').attr('src')
+            $(this).css({
+                backgroundImage: 'url(' + currentImage + ')'
+            })
+        })
 
-			var status = $( this ).data( 'status' );
-			console.log( status );
+        // HOME PAGE MOST VIEWED
+        $('.slider-secondary .flexslider').flexslider({
+            animation: "slide",
+            slideshow: false,
+            start: function (slider) {
+                $('.slider-secondary a.slider-next').on('click', function (e) {
+                    e.preventDefault()
+                    slider.flexAnimate(slider.getTarget("prev"));
+                })
 
-			switch( status ) {
-			    case 'off':
-			    	$( this ).data( 'status', 'on' );
-			        createCookie( 'navigation-status', 'on', 356 );
-			        break;
-			    case 'on':
-			    	$( this ).data( 'status', 'off' );
-			        createCookie( 'navigation-status', 'off', 356 );
-			        break;
-			}
+                $('.slider-secondary a.slider-prev').on('click', function (e) {
+                    e.preventDefault()
+                    slider.flexAnimate(slider.getTarget("next"));
+                })
+            }
+        });
 
-			$('.nav').toggleClass('open');
+        $('.link-menu').on('click', function (e) {
 
-			e.preventDefault();
-		});
+            var status = $(this).data('status');
 
-		$("a.link-top").click(function(e) {
-			e.preventDefault()
-			$("html, body").animate({ scrollTop: 0 });
-		});
+            switch (status) {
+                case 'off':
+                    $(this).data('status', 'on');
+                    createCookie('navigation-status', 'on', 356);
+                    break;
+                case 'on':
+                    $(this).data('status', 'off');
+                    createCookie('navigation-status', 'off', 356);
+                    break;
+            }
 
-		$('#sale').fadeIn();
+            $('.nav').toggleClass('open');
 
-		/*
-		$('.link-last-properties').on('click', function(e) {
-			e.preventDefault()
-			var currentHref = $(this).attr('href')
-			$('.properties-secondary').hide();
-			
-			if ( !$(this).hasClass('active') ) {
-				$(currentHref).fadeIn();
-				$(this).attr('href', '#sale')
-				$(this).find('strong').text('в Продажби')
-				$(this).addClass('active')
-			} else { 
-				$(currentHref).fadeIn();
-				$(this).attr('href', '#rent')
-				$(this).find('strong').text('в Наеми')
-				$(this).removeClass('active')
-			};
-		})
-		*/
+            e.preventDefault();
+        });
 
-		$('.map g[alt]').hover(function() {
-			$(this).attr("style", "fill:#ed5348;")
-			var currentTitle = $(this).attr('title')
-			$('.map-title').text(currentTitle)
-		}, function() {
-			var oldStyle = $(this).attr('fill')
-			$(this).attr("style", oldStyle)
-			$('.map-title').text("")
-		})
+        $("a.link-top").click(function (e) {
+            e.preventDefault()
+            $("html, body").animate({scrollTop: 0});
+        });
 
-		$("#fileuploader").uploadFile({
-			url:"css/images",
-			fileName:"myfile",
-			dragDropStr: "<span><b>Провлачи &amp; Пусни Файл</b></span>",
+        $('#sale').fadeIn();
+
+        $('.map g[alt]').hover(function () {
+            $(this).attr("style", "fill:#ed5348;")
+            var currentTitle = $(this).attr('title')
+            $('.map-title').text(currentTitle)
+        }, function () {
+            var oldStyle = $(this).attr('fill')
+            $(this).attr("style", oldStyle)
+            $('.map-title').text("")
+        })
+
+        $("#fileuploader").uploadFile({
+            url: "css/images",
+            fileName: "myfile",
+            dragDropStr: "<span><b>Провлачи &amp; Пусни Файл</b></span>",
             abortStr: "Спри",
             cancelStr: "Cancel",
             deletelStr: "Изтрии",
@@ -219,222 +198,258 @@
             extErrorStr: "Не е позволено. Позволени файлове: ",
             sizeErrorStr: "Не е позволено. Позволен максимален размер: ",
             uploadErrorStr: "Качването не е позволено"
-		});
+        });
 
-		$('.slider-secondary').each(function() {
-			var currentLeft = $('.section-head-primary h1 span').width()
-			$(this).find('.slider-actions').css({left : currentLeft+8})
-		})
+        $('.slider-secondary').each(function () {
+            var currentLeft = $('.section-head-primary h1 span').width()
+            $(this).find('.slider-actions').css({left: currentLeft + 8})
+        })
 
-		$('.list-galleries li a').on('click', function(e) {
-			e.preventDefault()
-		})
+        $(".list-galleries li a").fancybox({
+            loop: true,
+            arrows: true,
+            infobar: true,
+            mobile: {
+                // arrows: true,
+                // thumbs: {
+                //     autoStart: false
+                // },
+                preventCaptionOverlap: false,
+                idleTime: false,
+                clickContent: function (current, event) {
+                    console.log(current, event)
+                    return current.type === "image" ? "zoom" : false;
+                },
+                // dblclickContent: function(current, event) {
+                //     return false;
+                // }
+            },
+            buttons: [
+                "zoom",
+                // "share",
+                "slideShow",
+                // "fullScreen",
+                // "download",
+                "thumbs",
+                "close"
+            ],
+            animationEffect: "fade",
+            animationDuration: 400,
+            transitionEffect: "slide",
+            transitionDuration: 400
+            // Goes to next image on click - rather than zoom
+            // clickContent: function (current, event) {
+            //     return current.type === "image" ? "next" : false;
+            // }
+        });
 
-		$('.list-galleries li a').fancybox({
-			openEffect : 'elastic',
-			closeEffect : 'elastic'
-		});
+        $('.form-btn-trigger').fancybox({
+            animationEffect: "fade",
+            animationDuration: 400
+        });
 
-		$('.form-btn-trigger').fancybox({
-			'transitionIn'	:	'elastic',
-			'transitionOut'	:	'elastic',
-			'speedIn'		:	600, 
-			'speedOut'		:	200, 
-			'overlayShow'	:	false
-		});
+        $(document)
+            .find('.add-video-link a')
+            .addClass('youtube-video fancyboxiframe');
 
-		$(document)
-			.find('.add-video-link a')
-			.addClass('youtube-video fancyboxiframe');
+        $('.youtube-video').fancybox({
+            type: 'iframe',
+            scrolling: 'no',
+            maxWidth: 800,
+            maxHeight: 600,
+            fitToView: false,
+            width: '70%',
+            height: '70%',
+            autoSize: false,
+            closeClick: false,
+            openEffect: 'elastic',
+            closeEffect: 'none',
+        });
 
-		$('.youtube-video').fancybox({
-			type 		: 'iframe',
-			scrolling	: 'no',
-			maxWidth    : 800,
-			maxHeight   : 600,
-			fitToView   : false,
-			width       : '70%',
-			height      : '70%',
-			autoSize    : false,
-			closeClick  : false,
-			openEffect  : 'elastic',
-			closeEffect : 'none',
-		});
+        // Init the range sliders
 
-		// Init the range sliders
+        var $sqfSlider = $('#slider-sqf'),
+            $priceSlider = $('#slider-price'),
+            $sqfpSlider = $('#slider-price-sqf');
 
-		var $sqfSlider 		= $( '#slider-sqf' ),
-			$priceSlider 	= $( '#slider-price' ),
-			$sqfpSlider 	= $( '#slider-price-sqf' );
+        var sqfValueMin = $sqfSlider.find('.sqf-min').val(),
+            sqfValueMax = $sqfSlider.find('.sqf-max').val();
 
-		var sqfValueMin = $sqfSlider.find( '.sqf-min' ).val(),
-			sqfValueMax = $sqfSlider.find( '.sqf-max' ).val();
+        $sqfSlider.find('.slider-range').slider({
+            min: 0,
+            max: 500,
+            step: 1,
+            values: [sqfValueMin, sqfValueMax],
+            range: true,
+            slide: function (event, ui) {
+                var values = ui.values,
+                    min = values[0],
+                    max = values[1];
 
-		$sqfSlider.find( '.slider-range' ).slider({
-	      	min: 0,
-	      	max: 500,
-	      	step: 1,
-	      	values: [sqfValueMin, sqfValueMax],
-	      	range: true,
-	      	slide: function( event, ui ) {
-	      		var values  = ui.values,
-	      			min 	= values[0],
-	      			max 	= values[1];
+                $sqfSlider.find('.range-from span').text(min);
+                $sqfSlider.find('.range-to span').text(max);
 
-	      		$sqfSlider.find( '.range-from span' ).text( min );
-	      		$sqfSlider.find( '.range-to span' ).text( max );
+                $('.sqf-min').val(min);
+                $('.sqf-max').val(max);
+            }
+        });
 
-	      		$( '.sqf-min' ).val( min );
-				$( '.sqf-max' ).val( max );
-	      	}
-    	});
+        var priceMin = $priceSlider.find('.price-min').val(),
+            priceMax = $priceSlider.find('.price-max').val();
 
+        $priceSlider.find('.slider-range').slider({
+            min: 0,
+            max: 300000,
+            step: 500,
+            values: [priceMin, priceMax],
+            range: true,
+            slide: function (event, ui) {
+                var values = ui.values,
+                    min = values[0],
+                    max = values[1];
 
-    	var priceMin = $priceSlider.find( '.price-min' ).val(),
-			priceMax = $priceSlider.find( '.price-max' ).val();
+                $priceSlider.find('.range-from span').text(min);
+                $priceSlider.find('.range-to span').text(max);
 
-    	$priceSlider.find( '.slider-range' ).slider({
-	      	min: 0,
-	      	max: 300000,
-	      	step: 500,
-	      	values: [priceMin, priceMax],
-	      	range: true,
-	      	slide: function( event, ui ) {
-	        	var values  = ui.values,
-	      			min 	= values[0],
-	      			max 	= values[1];
+                $('.price-min').val(min);
+                $('.price-max').val(max);
+            }
+        });
 
-	      		$priceSlider.find( '.range-from span' ).text( min );
-	      		$priceSlider.find( '.range-to span' ).text( max );
+        var sqfpValueMin = $sqfpSlider.find('.sqfp-min').val(),
+            sqfpValueMax = $sqfpSlider.find('.sqfp-max').val();
 
-	      		$( '.price-min' ).val( min );
-				$( '.price-max' ).val( max );
-	      	}
-    	});
+        $sqfpSlider.find('.slider-range').slider({
+            min: 0,
+            max: 2000,
+            step: 1,
+            values: [sqfpValueMin, sqfpValueMax],
+            range: true,
+            slide: function (event, ui) {
+                var values = ui.values,
+                    min = values[0],
+                    max = values[1];
 
+                $sqfpSlider.find('.range-from span').text(min);
+                $sqfpSlider.find('.range-to span').text(max);
 
-    	var sqfpValueMin = $sqfpSlider.find( '.sqfp-min' ).val(),
-			sqfpValueMax = $sqfpSlider.find( '.sqfp-max' ).val();
+                $('.sqfp-min').val(min);
+                $('.sqfp-max').val(max);
+            }
+        });
 
-    	$sqfpSlider.find( '.slider-range' ).slider({
-	      	min: 0,
-	      	max: 2000,
-	      	step: 1,
-	      	values: [sqfpValueMin, sqfpValueMax],
-	      	range: true,
-	      	slide: function( event, ui ) {
-	        	var values  = ui.values,
-	      			min 	= values[0],
-	      			max 	= values[1];
+    }) // End Document Ready
 
-	      		$sqfpSlider.find( '.range-from span' ).text( min );
-	      		$sqfpSlider.find( '.range-to span' ).text( max );
+    function getPropertyImages() {
+        $('.item').on('click', '.listing-item', function (e) {
+            e.preventDefault();
 
-	      		$( '.sqfp-min' ).val( min );
-				$( '.sqfp-max' ).val( max );
-	      	}
-    	});
+            let $this = $(this),
+                itemId = $this.data('property-id');
 
-	}) // End Document Ready
-	
-	function createCookie(name,value,days) {
-		
-		if (days) {
-			var date = new Date();
-			date.setTime(date.getTime()+(days*24*60*60*1000));
-			var expires = "; expires="+date.toGMTString();
-		} else {
-			var expires = "";
-		}
-		
-		document.cookie = name+"="+value+expires+"; path=/";
-	}
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: wp_common_ajax.ajax_url,
+                data: {
+                    action: "get_property_images",
+                    propertyId: itemId
+                },
+                success: function (msg) {
+                    if (msg.success) {
+                        $.fancybox.open(msg.data, {
+                            spinnerTpl: '<div class="fancybox-loading"></div>',
+                            loop: false
+                        });
+                    }
+                }
+            });
+        });
+    }
 
-	function readCookie(name) {
-		var nameEQ = name + "=";
-		var ca = document.cookie.split(';');
-		for(var i=0;i < ca.length;i++) {
-			var c = ca[i];
-			while (c.charAt(0)==' ') c = c.substring(1,c.length);
-			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-		}
-		return null;
-	}
+    function createCookie(name, value, days) {
 
-	function eraseCookie(name) {
-		createCookie(name,"",-1);
-	}
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else {
+            var expires = "";
+        }
 
-	function detectPhoneNumbers() {
-		let $body = $('body');
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
 
-		if (!$body.hasClass('page-template-default') && !$body.hasClass('single-property')) {
-			return;
-		}
+    function detectPhoneNumbers() {
+        let $body = $('body');
 
-		$(".content .post, .estate .estate-body").filter(function () {
-			let html = $(this).html();
+        if (!$body.hasClass('page-template-default') && !$body.hasClass('single-property')) {
+            return;
+        }
 
-			let phonePattern = /(\d{4}\s\d{3}\s\d{3})|(\d{3}\/\s\d{3}\s\d{3})|(\d{10})/g;
+        $(".content .post, .estate .estate-body").filter(function () {
+            let html = $(this).html();
 
-			let matchedString = $(this).html().match(phonePattern);
-			if (matchedString) {
-				let text = $(this).html();
+            let phonePattern = /(\d{4}\s\d{3}\s\d{3})|(\d{3}\/\s\d{3}\s\d{3})|(\d{10})/g;
 
-				$.each(matchedString, function (index, value) {
-					let phone = value.replace(/\/| /g, '');
-					text = text.replace(value, "<a href='tel:" + phone + "'>" + value + "</a>");
-				});
-				$(this).html(text);
+            let matchedString = $(this).html().match(phonePattern);
+            if (matchedString) {
+                let text = $(this).html();
 
-				return $(this)
-			}
-		});
-	}
+                $.each(matchedString, function (index, value) {
+                    let phone = value.replace(/\/| /g, '');
+                    text = text.replace(value, "<a href='tel:" + phone + "'>" + value + "</a>");
+                });
+                $(this).html(text);
 
-	var gf_placeholder = function() {
-		$('.gform_wrapper')
-			.find('input, textarea').filter(function(i){
-				var $field = $(this);
-				
-				if (this.nodeName == 'INPUT') {
-					var type = this.type;
-					return !(type == 'hidden' || type == 'file' || type == 'radio' || type == 'checkbox');
-				}
+                return $(this)
+            }
+        });
+    }
 
-				return true;
-			})
-			.each(function(){
-				var $field = $(this);
+    var gf_placeholder = function () {
+        $('.gform_wrapper')
+            .find('input, textarea').filter(function (i) {
+            var $field = $(this);
 
-				var id = this.id;
-				var $labels = $('label[for=' + id + ']').hide();
-				var label = $labels.last().text();
+            if (this.nodeName == 'INPUT') {
+                var type = this.type;
+                return !(type == 'hidden' || type == 'file' || type == 'radio' || type == 'checkbox');
+            }
 
-				if (label.length > 0 && label[ label.length-1 ] == '*') {
-					label = label.substring(0, label.length-1) + ' *';
-				}
+            return true;
+        })
+            .each(function () {
+                var $field = $(this);
 
-				$field[0].setAttribute('placeholder', label);
-			});
+                var id = this.id;
+                var $labels = $('label[for=' + id + ']').hide();
+                var label = $labels.last().text();
 
-		var support = (!('placeholder' in document.createElement('input'))); // borrowed from Modernizr.com
-		if ( support && jquery_placeholder_url )
-			$.ajax({
-				cache: true,
-				dataType: 'script',
-				url: jquery_placeholder_url,
-				success: function() {
-					$('input[placeholder], textarea[placeholder]').placeholder({
-						blankSubmit: true
-					});
-				},
-				type: 'get'
-			});
-	}
+                if (label.length > 0 && label[label.length - 1] == '*') {
+                    label = label.substring(0, label.length - 1) + ' *';
+                }
 
-	$.fn.hasAttr = function(name) {  
-		return this.attr(name) !== undefined;
-	};
+                $field[0].setAttribute('placeholder', label);
+            });
+
+        var support = (!('placeholder' in document.createElement('input'))); // borrowed from Modernizr.com
+        if (support && jquery_placeholder_url)
+            $.ajax({
+                cache: true,
+                dataType: 'script',
+                url: jquery_placeholder_url,
+                success: function () {
+                    $('input[placeholder], textarea[placeholder]').placeholder({
+                        blankSubmit: true
+                    });
+                },
+                type: 'get'
+            });
+    }
+
+    $.fn.hasAttr = function (name) {
+        return this.attr(name) !== undefined;
+    };
 
 }(jQuery, document, window));

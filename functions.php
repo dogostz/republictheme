@@ -10,16 +10,17 @@ function crb_wp_enqueue_scripts() {
 	# Enqueue jQuery
 	wp_enqueue_script('jquery');
 
-	# Enqueue Custom JS files
-	crb_enqueue_script('jquery.fancybox.pack', get_bloginfo('stylesheet_directory') . '/js/jquery.fancybox.pack.js', array('jquery'));
+    # Enqueue Custom JS files
+	crb_enqueue_script('jquery.fancybox', get_bloginfo('stylesheet_directory') . '/js/jquery.fancybox.min.js', array('jquery'));
 	crb_enqueue_script('jquery.flexslider', get_bloginfo('stylesheet_directory') . '/js/jquery.flexslider.js', array('jquery'));
 	crb_enqueue_script('jquery.uploadfile', get_bloginfo('stylesheet_directory') . '/js/jquery.uploadfile.js', array('jquery'));
 	crb_enqueue_script('jquery-ui.min', get_bloginfo('stylesheet_directory') . '/js/jquery-ui.min.js', array('jquery'));
-	crb_enqueue_script('functions', get_bloginfo('stylesheet_directory') . '/js/functions.js', array('jquery'));
+	crb_enqueue_script('js-functions', get_bloginfo('stylesheet_directory') . '/js/functions.js', array('jquery'));
+    wp_localize_script( 'js-functions', 'wp_common_ajax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 
 	# Enqueue Custom CSS files
 	crb_enqueue_style('flexslider', $template_dir . '/css/flexslider.css');
-	crb_enqueue_style('jquery.fancybox', $template_dir . '/css/jquery.fancybox.css');
+	crb_enqueue_style('jquery.fancybox', $template_dir . '/css/jquery.fancybox.min.css');
 	crb_enqueue_style('jquery-ui.structure', $template_dir . '/css/jquery-ui.structure.css');
 	crb_enqueue_style('jquery-ui.theme.min', $template_dir . '/css/jquery-ui.theme.min.css');
 	crb_enqueue_style('uploadfile', $template_dir . '/css/uploadfile.css');
@@ -112,6 +113,7 @@ if (!function_exists('crb_setup_theme')) {
 		}
 		include_once(CRB_THEME_DIR . 'includes/property-data-arrays.php');
 		// include_once(CRB_THEME_DIR . 'includes/property-migrations.php');
+		include_once(CRB_THEME_DIR . 'includes/ajax-actions.php');
 		include_once(CRB_THEME_DIR . 'includes/breadcrumbs.php');
 		include_once(CRB_THEME_DIR . 'includes/filters.php');
 		include_once(CRB_THEME_DIR . 'includes/gravity-forms.php');
@@ -535,7 +537,7 @@ function crb_property_location( $pid = null, $custom_tag = null ) {
 	<?php
 }
 
-function crb_property_featured_image( $pid = null ) {
+function crb_get_property_featured_image( $pid = null ) {
 
 	if ( empty($pid) ) {
 		$pid = get_the_ID();
@@ -550,6 +552,15 @@ function crb_property_featured_image( $pid = null ) {
 	}
 
 	return $image;
+}
+
+function crb_get_property_featured_images( $pid = null ) {
+
+    if ( empty($pid) ) {
+        $pid = get_the_ID();
+    }
+
+    return carbon_get_post_meta( $pid, 'property_images', 'complex' );
 }
 
 function crb_news_featured_image( $pid = null ) {
@@ -1338,22 +1349,6 @@ function crb_remove_meta_boxes() {
 
 function crb_get_special_owner_id() {
 	return array( 3, 8 );
-}
-
-add_action('template_redirect', 'crb_test_mail');
-function crb_test_mail() {
-	if (!isset($_GET['test-mail'])) {
-		return false;
-	}
-
-	$to = 'republicbg@yahoo.com';
-	$subject = 'Тест мейл';
-	$body = 'The email body content';
-	 
-	wp_mail( $to, $subject, $body );
-
-	die('sent');
-	return true;
 }
 
 add_action('after_setup_theme', 'remove_core_updates');

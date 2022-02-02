@@ -52,7 +52,7 @@
 				$price 	= crb_get_meta( '_property_real_price' );
 				$size 	= crb_get_meta( '_property_size' );
 
-				$image = crb_property_featured_image();
+				$image = crb_get_property_featured_image();
 			?>
 
 				<li class="property-seconadary">

@@ -33,7 +33,7 @@
 			?>
 				
 				<li>
-					<a href="<?php echo $src; ?>" rel="group">
+					<a href="<?php echo $src; ?>" rel="group" data-fancybox="gallery">
 						<img src="<?php echo wpthumb( $src, $args ); ?>" alt="" / >
 					</a>
 				</li>

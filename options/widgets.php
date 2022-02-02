@@ -107,7 +107,7 @@ class ThemeWidgetLatestBrowsed extends Carbon_Widget {
 					$price 	= crb_get_meta( '_property_real_price', $pid );
 					$size 	= crb_get_meta( '_property_size', $pid );
 
-					$image = crb_property_featured_image( $pid );
+					$image = crb_get_property_featured_image( $pid );
 				?>
 					
 					<li class="update">

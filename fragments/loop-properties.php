@@ -27,9 +27,9 @@
 	);
 
 	$range_data = array(
-		'_property_size' 		=> array( 'sqf-min', 'sqf-max' ),
-		'_property_real_price' 	=> array( 'price-min', 'price-max' ),
-		'_property_sqf_price' 	=> array( 'sqfp-min', 'sqfp-max' ),
+		 '_property_size' 		=> array( 'sqf-min', 'sqf-max' ),
+		 '_property_real_price' 	=> array( 'price-min', 'price-max' ),
+		 '_property_sqf_price' 	=> array( 'sqfp-min', 'sqfp-max' ),
 	);
 
 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
@@ -92,7 +92,7 @@
 			if ( !isset($_GET[$range_value]) ) {
 				continue;
 			}
-			
+
 			if ( preg_match('/min/', $range_value) ) {
 				$min = $_GET[$range_value];
 			} else {
@@ -100,7 +100,7 @@
 			}
 		}
 
-		if ( ($min != '') && ($max != '') ) {
+		if ( ($min !== '') && ($max !== '') ) {
 			$query_stage_3[] = array(
 				'key' 		=> $range_key,
 				'value' 	=> array($min, $max),
@@ -124,25 +124,6 @@
 	);
 
 	// Meta query - stage 4
-	if ( isset($_GET['build-year']) && !empty($_GET['build-year']) ) {
-		$year = crb_get_standard_meta_data( 'build-year', crb_year_options() );
-		$ints = preg_replace('/\D/', '', $year[0]);
-
-		$operator = '>=';
-
-		if ( $year[0] == 'преди 2000' ) {
-			$operator = '<';
-		}
-
-		$args['meta_query'][] = array(
-			'key' 		=> '_property_year',
-			'value' 	=> $ints,
-			'compare' 	=> $operator,
-			'type' 		=> 'NUMERIC'
-		);
-	}
-
-	// Meta query - stage 5
 	$criteria = crb_criteria_data();
 	if ( $criteria ) {
 		foreach ($criteria as $crt => $key) {
@@ -205,7 +186,7 @@
 	}
 
 	if ( !empty($query_stage_6) ) {
-		// As this is a very specif search
+		// As this is a very specific search
 		// We ignore the previous criteria
 		// $args['meta_query'] = array();
 
@@ -266,12 +247,13 @@
 		// Metas
 		$price 		= crb_get_meta( '_property_real_price' );
 		$db_status 	= crb_get_meta( '_property_status' );
-		$image 		= crb_property_featured_image();
+		$images 	= crb_get_property_featured_images();
 		$broker_id  = crb_get_meta( '_property_broker' );
 		$user_id    = carbon_get_user_meta( $broker_id, 'assoc_user' );
 		$mobile 	= crb_get_meta( '_broker_mobile', $user_id );
 
 		$pr_class = '';
+		$featured_image = !empty($images[0]['image']) ? $images[0]['image'] : get_bloginfo( 'stylesheet_directory') . '/images/placeholder.png';
 
 		$type = get_post_type();
 
@@ -317,9 +299,9 @@
 			}
 		?>
 
-		<div class="item-image">
+		<div class="item-image listing-item" data-property-id="<?php echo get_the_ID(); ?>">
 			<a href="<?php echo (crb_can_open_property($is_sold) ? get_permalink() : '#' ) ?>">
-				<img src="<?php echo wpthumb( $image, $img_args ); ?>" width="500" height="372" alt="" / >
+				<img src="<?php echo wpthumb( $featured_image, $img_args ); ?>" width="500" height="372" alt="" / >
 				<?php if ( $is_sold ) : ?>
 					
 					<?php if ( $page_type == 'rent' ) : ?>

@@ -1154,7 +1154,7 @@ a.comment-edit-link:hover { color: #ff4b33 }
     .items .item { margin: 0 0 20px 0; }
     .item-content { clear: both; }
     .item-image { width: 100%; height: auto; }
-    .item .list-properties { float: none; width: 100%; min-height: auto; height: auto; margin-right: 0; border-right: 0; border-bottom: 1px solid #c9ced3; }
+    .item .list-properties { /*float: none;*/ width: 100%; min-height: auto; height: auto; margin-right: 0; border-right: 0; border-bottom: 1px solid #c9ced3; }
     .item .list-properties li { display: inline-block; vertical-align: top; width: auto; border-bottom: none; }
     .item .list-properties li.large-text { font-size: 13px; }
     .item-content .item-head,
