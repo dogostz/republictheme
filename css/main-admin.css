@@ -1,0 +1,15 @@
+#menu-dashboard,
+#menu-comments,
+#menu-appearance,
+#menu-plugins,
+#menu-tools,
+/*#menu-settings,*/
+#toplevel_page_gf_edit_forms{ /*display: none;*/ }
+
+.property-sold { background-color: #FFDFDF; }
+.property-sold td,
+.property-sold th { border-top: 1px solid #C89797; border-bottom: 1px solid #C89797; }
+
+.button-red { background: #ff0000 !important; color: #fff !important; border: none !important; }
+.button-blue { background: #1d3758 !important; color: #fff !important; border: none !important; }
+.button-green { background: #00992c !important; color: #fff !important; border: none !important; }

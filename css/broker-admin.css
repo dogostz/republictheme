@@ -1,0 +1,21 @@
+/*#menu-dashboard,
+#menu-posts,
+#menu-posts-slide,
+#menu-posts-broker,
+#menu-comments,
+#menu-appearance,
+#menu-plugins,
+#menu-tools,
+#toplevel_page_gf_edit_forms,
+#menu-settings { display: none; }
+
+.property-sold { background-color: #FFDFDF; }
+.property-sold td,
+.property-sold th { border-top: 1px solid #C89797; border-bottom: 1px solid #C89797; }*/
+
+.broker-admin-info { font-size: 16px; line-height: 18px; margin: 0 0 20px; }
+.broker-admin-info.with-error { color: #ff0000; }
+
+.button-red { background: #ff0000 !important; color: #fff !important; border: none !important; }
+.button-blue { background: #1d3758 !important; color: #fff !important; border: none !important; }
+.button-green { background: #00992c !important; color: #fff !important; border: none !important; }
